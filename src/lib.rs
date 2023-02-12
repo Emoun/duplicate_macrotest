@@ -8,14 +8,14 @@
 //!
 //! # Macro expansion tests
 //!
-//! A minimal `macrotest` setup looks like this:
+//! A minimal `duplicate_macrotest` setup looks like this:
 //!
 //! ```rust
 //! #[test]
 //! pub fn pass() {
-//!     macrotest::expand("tests/expand/*.rs");
+//!     duplicate_macrotest::expand("tests/expand/*.rs");
 //!     // Alternatively,
-//!     macrotest::expand_without_refresh("tests/expand/*.rs");
+//!     duplicate_macrotest::expand_without_refresh("tests/expand/*.rs");
 //! }
 //! ```
 //!
@@ -51,9 +51,9 @@
 //!
 //! ```rust
 //! pub fn pass() {
-//!     macrotest::expand_args("tests/expand/*.rs", &["--features", "my-feature"]);
+//!     duplicate_macrotest::expand_args("tests/expand/*.rs", &["--features", "my-feature"]);
 //!     // Or
-//!     macrotest::expand_without_refresh_args("tests/expand/*.rs", &["--features", "my-feature"]);
+//!     duplicate_macrotest::expand_without_refresh_args("tests/expand/*.rs", &["--features", "my-feature"]);
 //! }
 //! ```
 //!
@@ -89,9 +89,9 @@
 //! ```rust
 //! #[test]
 //! pub fn pass() {
-//!     macrotest::expand("tests/expand/*.rs");
+//!     duplicate_macrotest::expand("tests/expand/*.rs");
 //!     // Or:
-//!     macrotest::expand_without_refresh("tests/expand/*.rs");
+//!     duplicate_macrotest::expand_without_refresh("tests/expand/*.rs");
 //! }
 //! ```
 //!
