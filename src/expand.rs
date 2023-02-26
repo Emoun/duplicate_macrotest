@@ -217,8 +217,20 @@ fn run_tests<I, S>(
                     }
 
                     ExpansionOutcomeKind::Different(a, b) => {
-                        message_different(&path.to_string(), &a, &b);
-                        failures += 1;
+                        if expect_fail {
+                            let expected = String::from_utf8_lossy(a.as_ref());
+                            let actual = String::from_utf8_lossy(b.as_ref());
+
+                            if !actual.contains(expected.as_ref()) {
+                                message_different(&path.to_string(), &a, &b);
+                                failures += 1;
+                            } else {
+                                let _ = writeln!(std::io::stdout(), "{} - ok", path);
+                            }
+                        } else {
+                            message_different(&path.to_string(), &a, &b);
+                            failures += 1;
+                        }
                     }
 
                     ExpansionOutcomeKind::Update(_) => {
