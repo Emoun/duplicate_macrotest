@@ -206,9 +206,12 @@ fn run_tests<I, S>(
                     if !expect_fail {
                         message_expansion_error(msg);
                         failures += 1;
-
                         continue;
                     }
+                } else if expect_fail {
+                    let _ = writeln!(std::io::stdout(), "{} - Did not error!", path);
+                    failures += 1;
+                    continue;
                 }
 
                 match outcome {
