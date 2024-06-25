@@ -224,7 +224,7 @@ fn run_tests<I, S>(
                             let expected = String::from_utf8_lossy(a.as_ref());
                             let actual = String::from_utf8_lossy(b.as_ref());
 
-                            if !actual.contains(expected.as_ref()) {
+                            if !matches_expected(&expected, &actual) {
                                 message_different(&path.to_string(), &a, &b);
                                 failures += 1;
                             } else {
@@ -262,6 +262,32 @@ fn run_tests<I, S>(
     if failures > 0 {
         eprintln!("\n\n");
         panic!("{} of {} tests failed", failures, len);
+    }
+}
+
+/// Tests if the result roughly matches the expected result.
+fn matches_expected(expected: &str, actual: &str) -> bool {
+    actual.contains(expected) || trim_each_line(actual).contains(&trim_each_line(expected))
+}
+
+/// Trims whitespace off the start and end of each line in the input string.
+/// Preserves the line endings from the input.
+fn trim_each_line(input: &str) -> String {
+    input
+        .split_inclusive('\n')
+        .map(split_line_ending)
+        .flat_map(|(line, ending)| [line.trim(), ending])
+        .collect()
+}
+
+/// Separates the line content from it's (optional) trailing line ending.
+fn split_line_ending(input: &str) -> (&str, &str) {
+    if let Some(input) = input.strip_suffix("\r\n") {
+        (input, "\r\n")
+    } else if let Some(input) = input.strip_suffix('\n') {
+        (input, "\n")
+    } else {
+        (input, "")
     }
 }
 
