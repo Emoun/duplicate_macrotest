@@ -224,7 +224,7 @@ fn run_tests<I, S>(
                             let expected = String::from_utf8_lossy(a.as_ref());
                             let actual = String::from_utf8_lossy(b.as_ref());
 
-                            if !actual.contains(expected.as_ref()) {
+                            if !matches_expected(&expected, &actual) {
                                 message_different(&path.to_string(), &a, &b);
                                 failures += 1;
                             } else {
@@ -263,6 +263,14 @@ fn run_tests<I, S>(
         eprintln!("\n\n");
         panic!("{} of {} tests failed", failures, len);
     }
+}
+
+fn matches_expected(expected: &str, actual: &str) -> bool {
+    actual.contains(expected) || trim_each_line(actual).contains(&trim_each_line(expected))
+}
+
+fn trim_each_line(input: &str) -> String {
+    input.lines().map(|l| l.trim()).collect()
 }
 
 fn prepare(tests: &[ExpandedTest]) -> Result<Project> {
