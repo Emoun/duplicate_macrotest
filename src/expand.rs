@@ -265,12 +265,30 @@ fn run_tests<I, S>(
     }
 }
 
+/// Tests if the result roughly matches the expected result.
 fn matches_expected(expected: &str, actual: &str) -> bool {
     actual.contains(expected) || trim_each_line(actual).contains(&trim_each_line(expected))
 }
 
+/// Trims whitespace off the start and end of each line in the input string.
+/// Preserves the line endings from the input.
 fn trim_each_line(input: &str) -> String {
-    input.lines().map(|l| l.trim()).collect()
+    input
+        .split_inclusive('\n')
+        .map(split_line_ending)
+        .flat_map(|(line, ending)| [line.trim(), ending])
+        .collect()
+}
+
+/// Separates the line content from it's (optional) trailing line ending.
+fn split_line_ending(input: &str) -> (&str, &str) {
+    if let Some(input) = input.strip_suffix("\r\n") {
+        (input, "\r\n")
+    } else if let Some(input) = input.strip_suffix('\n') {
+        (input, "\n")
+    } else {
+        (input, "")
+    }
 }
 
 fn prepare(tests: &[ExpandedTest]) -> Result<Project> {
