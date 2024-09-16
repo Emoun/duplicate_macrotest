@@ -1,6 +1,6 @@
 [package]
 name = "duplicate_macrotest"
-version = "1.0.5"
+version = "1.0.7"
 authors = ["Emad Jacob Maroun <emoun.open@gmail.com>"]
 edition = "2021"
 license = "MIT OR Apache-2.0"

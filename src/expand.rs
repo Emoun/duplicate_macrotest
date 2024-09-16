@@ -236,7 +236,7 @@ fn run_tests<I, S>(
                         }
                     }
 
-                    ExpansionOutcomeKind::Update(_) => {
+                    ExpansionOutcomeKind::Update => {
                         let _ =
                             writeln!(std::io::stderr(), "{} - refreshed", expanded_path.display());
                     }
@@ -333,9 +333,9 @@ fn prepare(tests: &[ExpandedTest]) -> Result<Project> {
     if let Some(enabled_features) = &mut project.features {
         enabled_features.retain(|feature| manifest.features.contains_key(feature));
     }
-
-    fs::create_dir_all(path!(project.dir / ".cargo"))?;
-    fs::write(path!(project.dir / ".cargo" / "config"), config_toml)?;
+    
+    fs::create_dir_all(path!(project.dir))?;
+    fs::write(path!(project.dir / "config.toml"), config_toml)?;
     fs::write(path!(project.dir / "Cargo.toml"), manifest_toml)?;
     fs::write(path!(project.dir / "main.rs"), b"fn main() {}\n")?;
 
@@ -434,7 +434,7 @@ impl ExpansionOutcome {
 enum ExpansionOutcomeKind {
     Same,
     Different(Vec<u8>, Vec<u8>),
-    Update(Vec<u8>),
+    Update,
     NoExpandedFileFound,
 }
 
@@ -492,7 +492,7 @@ impl ExpandedTest {
 
             return Ok(ExpansionOutcome::new(
                 error,
-                ExpansionOutcomeKind::Update(output_bytes),
+                ExpansionOutcomeKind::Update,
             ));
         }
 
@@ -514,7 +514,7 @@ impl ExpandedTest {
 
             return Ok(ExpansionOutcome::new(
                 error,
-                ExpansionOutcomeKind::Update(output_bytes),
+                ExpansionOutcomeKind::Update,
             ));
         }
 
