@@ -3,7 +3,6 @@ use std::ffi::OsStr;
 use std::fs;
 use std::io::Write;
 use std::path::{Path, PathBuf};
-
 use rand::{distributions::{Alphanumeric, DistString}};
 
 use crate::cargo;
@@ -338,7 +337,10 @@ fn prepare(tests: &[ExpandedTest]) -> Result<Project> {
     fs::write(path!(project.dir / "config.toml"), config_toml)?;
     fs::write(path!(project.dir / "Cargo.toml"), manifest_toml)?;
     fs::write(path!(project.dir / "main.rs"), b"fn main() {}\n")?;
-
+    // Copy the source's lock file to ensure compatibility of dependency versions.
+    // Ignore failures to do so.
+    let _ = fs::copy(path!(project.source_dir / "Cargo.lock"), path!(project.dir / "Cargo.lock"));
+    
     cargo::build_dependencies(&project)?;
 
     Ok(project)
