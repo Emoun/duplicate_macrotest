@@ -533,7 +533,10 @@ impl ExpandedTest {
 }
 
 // `cargo expand` does always produce some fixed amount of lines that should be ignored
+#[rustversion::before(1.94)]
 const CARGO_EXPAND_SKIP_LINES_COUNT: usize = 5;
+#[rustversion::since(1.94)]
+const CARGO_EXPAND_SKIP_LINES_COUNT: usize = 4;
 const CARGO_EXPAND_ERROR_SKIP_LINES_COUNT: usize = 1;
 
 /// Removes specified number of lines and removes some unnecessary or non-determenistic cargo output
